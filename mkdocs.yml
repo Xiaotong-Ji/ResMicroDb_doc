@@ -22,9 +22,11 @@ theme:
     - toc.follow
     - toc.integrate 
 
+
 # Page tree
 nav:
   - Welcome & key features: index.md
-  - Materials and methods:
-    - Installation: getting-started.md
-    
+  - Home: Home.md
+  - Search: Search.md
+  - Browse: Browse.md
+  - Analysis: Analysis.md
