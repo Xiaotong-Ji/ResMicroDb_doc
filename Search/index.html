@@ -8,9 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://mydomain.org/mysite/getting-started/">
+        <link rel="canonical" href="https://mydomain.org/mysite/Search/">
       
       
+        <link rel="prev" href="../Home/">
+      
+      
+        <link rel="next" href="../Browse/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Getting started - ResMicroDb documentation</title>
+        <title>Search - ResMicroDb documentation</title>
       
     
     
@@ -70,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#search" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting started
+              Search
             
           </span>
         </div>
@@ -266,10 +270,19 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../Search/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -279,6 +292,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -341,7 +355,64 @@
 
 
 
-<h1 id="getting-started">Getting started</h1>
+<h1 id="search">Search</h1>
+<p><img alt="image-20250208210606484" src="../assets/image-20250208210606484.png" /></p>
+<ol>
+<li>Taxa name，在data/taxa_intro.tsv的taxa列中检索。链接到<code>Search-{taxa}</code>。示例：Moraxella, Streptococcus, Staphylococcus。（注意斜体）</li>
+<li>Phenotype，在data/phenotype.tsv的Phenotype列检索。链接到<code>Browse-phenotype-{disease}</code>。示例：asthma, COVID-19, cystic fibrosis</li>
+<li>Body Site直接对应<code>Browse-body-sites</code>对应的部位。链接到<code>Browse-{body-sites}</code>。示例：nasopharynx, sputum, BALF</li>
+</ol>
+<h1 id="search-streptococcus">Search-Streptococcus</h1>
+<p><img alt="image-20250206210507295" src="../assets/image-20250206210507295.png" /></p>
+<p>Streptococcus斜体</p>
+<p>Introduction: Lineage后的信息，以及菌的介绍分别对应data/taxa_intro.tsv的lineage和info列（筛选taxa列为搜索的Streptococcus）,链接对应</p>
+<p>Wikipedia: https://en.wikipedia.org/wiki/{taxa}</p>
+<p>MicrobeWiki: https://microbewiki.kenyon.edu/index.php/{taxa}</p>
+<p>NCBI Taxonomy: https://www.ncbi.nlm.nih.gov/taxonomy/?term={taxa}</p>
+<p>Distribution in different body sites：对应data/Taxa_in_Body_Site.tsv（筛选taxa列为搜索的Streptococcus），第一列和第二列Visualization（图标居中）链接到<code>visulize-Streptococcus-nasopharynx</code>页面，图标在figure/Visualization.svg。数值填充颜色为#90C2FA。</p>
+<p><strong>表格中的NA填充有bug</strong></p>
+<p><img alt="image-20250212105234251" src="../assets/image-20250212105234251.png" /></p>
+<p>文字部分：ALDEX2链接https://www.bioconductor.org/packages/release/bioc/html/ALDEx2.html。browse-marker链接到<code>browse-markers</code>页面,筛选Taxa列为Streptococcus。fold change&gt;0背景染色#F9E8EC，fold change&lt;0背景染色#D2EFE4，效果类似于https://gmrepo.humangut.info/phenotypes/comparisons/D006262/D000086382的最底部。</p>
+<p>表格部分：</p>
+<p>对应data/marker_taxon.tsv（筛选taxa列为搜索的Streptococcus）。</p>
+<p>fc_sign为positive代表在Case组富集，对应Case列，染色#F9E8EC。fc_sign为negative代表在Control组富集，对应Control列，染色#D2EFE4。并且在染色的块后面加上箭头，强调富集的意思。</p>
+<p>Fold_Change后面的问号解释内容为：the mean of the differences between 0.1-0.9 quantiles of the logarithmic in two groups.</p>
+<p>Case和Control，链接到<code>Browse-phenotype-{disease}</code>页面。ase-control analysis列链接<code>Analysis-case-control-analysis</code>页面，图标在figure/case-control-analysis.svg。</p>
+<h1 id="visulize-streptococcus-nasopharynx">visulize-Streptococcus-nasopharynx</h1>
+<p><img alt="image-20250208211247848" src="../assets/image-20250208211247848.png" /></p>
+<ol>
+<li>标题对应<code>Search-taxa-Streptococcus</code>的Distribution in different body sites筛选的 <code>{taxa} in {Body_Site} ({Sequencing_Type})</code>。注意taxa斜体</li>
+<li>
+<p>Phenotypes</p>
+</li>
+<li>
+<p>数据data/Taxa_in_Body_Site_of_Phenotype.tsv（筛选taxa列为搜索的Streptococcus）</p>
+</li>
+<li>prevalence in different phenotypes的bar图对应prevalence列，label为prevalence_label列。Phenotype为health study participation颜色为#66c2a5，其他颜色为#4697ec。排序先按prevalence列降序，再按 num列降序。</li>
+<li>abundance in different phenotypes的boxplot图对应abu_min   abu_q1  abu_median  abu_q3  abu_max列。</li>
+<li>
+<p>Display phenotypes with sample sizes greater than可以对num的个数进行筛选phenotype,默认num》50</p>
+</li>
+<li>
+<p>Countries</p>
+</li>
+<li>
+<p>数据data/Taxa_in_Body_Site_of_Countries.tsv（筛选taxa列为搜索的Streptococcus）</p>
+</li>
+<li>Select phenotype对Phenotype列进行筛选（单选框，默认是Phenotype=="all"）</li>
+<li>
+<p>左右图对应relative_abundance   prevalence列，以连续的值展示。标题(all)里面的是筛选的对应的Phenotype。</p>
+</li>
+<li>
+<p>Age</p>
+</li>
+<li>
+<p>数据data/Taxa_in_Body_Site_of_Age.tsv（筛选taxa列为搜索的Streptococcus）</p>
+</li>
+<li>Select phenotype对Phenotype列进行筛选（单选框，默认是Phenotype=="all"）</li>
+<li>prevalence in different age的bar图对应prevalence列。标题(all)里面的是筛选的对应的Phenotype。Age_Group注意顺序为c("0-3", "3-18", "18-30", "30-50", "50-70", "70-100")。</li>
+<li>abundance in different phenotypes的boxplot图对应abu_min   abu_q1  abu_median  abu_q3  abu_max列。标题和Age_Group顺序同上。</li>
+</ol>
 
 
 

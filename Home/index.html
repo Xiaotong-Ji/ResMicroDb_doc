@@ -8,9 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://mydomain.org/mysite/getting-started/">
+        <link rel="canonical" href="https://mydomain.org/mysite/Home/">
       
       
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../Search/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Getting started - ResMicroDb documentation</title>
+        <title>Home - ResMicroDb documentation</title>
       
     
     
@@ -70,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#home" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting started
+              Home
             
           </span>
         </div>
@@ -245,10 +249,19 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../Home/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -258,6 +271,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -341,7 +355,113 @@
 
 
 
-<h1 id="getting-started">Getting started</h1>
+<h1 id="home">Home</h1>
+<h1 id="resmicrodb">ResMicroDb</h1>
+<p><img alt="image-20250212163536991" src="../assets/image-20250212163536991.png?lastModify=1740380019" /></p>
+<ol>
+<li>
+<p>Logo:figure/logo.png</p>
+</li>
+<li>
+<p>ResMicroDb对应颜色：#ECB35D，#82BAE4，#A7C9A7</p>
+</li>
+<li>
+<p>呼吸道部位图对应figure/body_sites.png</p>
+</li>
+<li>
+<p>部位-疾病健康分布对应data/body_site_distribution.tsv。case代表疾病disease，control代表健康health</p>
+</li>
+</ol>
+<p>鼠标移到body_site的bar上面，显示对应疾病健康的样本个数，以nasopharynx为例</p>
+<p><code>nasopharynx
+    health samples:9,580
+    disease samples:3,614</code></p>
+<p>点击链接到<code>Browse-body-sites</code>。颜色对应</p>
+<p><code>R
+    body2col &lt;- c(
+      "nasal" = "#1f77b4",       
+      "nasopharynx" = "#377eb8",
+      "oropharynx" = "#6baed6",
+      "pharynx" = "#9ecae1",
+      "sputum" = "#ff7f0e",      
+      "trachea" = "#fd8d3c",
+      "bronchus" = "#fdae6b",
+      "BALF" = "#fdd0a2",
+      "lung" = "#feedde"
+    )</code></p>
+<ol>
+<li>数字分别对应metadata的Phenotype、Run、SRAStudy列的非重复个数(除去NA)。Publication对应data/publication.tsv的行数）。图标分别对应figure/phenotypes.png、figure/samples.png、figure/studies.png、figure/publications.png。</li>
+</ol>
+<p>链接到Browse对应页面，Browse-phenotypes, Browse-samples, Browse-studies,Browse-publications。</p>
+<ol>
+<li>蓝色部分分别链接到Search#8AB1D0（筛选框为Taxa name或Phenotype）、Browse#BDBBD8(Browse-samples, browse-studies)、Analysis#F2B176(Analysis-microbiome-composition,Analysis-case-control-analysis )对应页面</li>
+</ol>
+<h1 id="data-summary">Data Summary</h1>
+<p><img alt="image-20250208210009557" src="../assets/image-20250208210009557.png?lastModify=1740380019" /></p>
+<ol>
+<li>有两个表data/country.tsv（国家、频数），data/country_location.tsv（国家、地区、经纬度，频数）。</li>
+<li>对应表data/top10countries.tsv</li>
+<li>对应metadata的Sequencing_Type列</li>
+<li>对应data/top10phe.tsv的Phenotype列</li>
+<li>对应metadata的Age_Group列，注意顺序为c("0-3", "3-18", "18-30", "30-50", "50-70", "70-100")。</li>
+</ol>
+<h1 id="ciation-and-contact">ciation and contact</h1>
+<p><img alt="image-20250208210112619" src="../assets/image-20250208210112619.png?lastModify=1740380019" /></p>
+<p>Relate links对应的链接</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">pubmed</td>
+<td>https://pubmed.ncbi.nlm.nih.gov/</td>
+</tr>
+<tr>
+<td style="text-align: left;">NCBI Taxonomy</td>
+<td>https://www.ncbi.nlm.nih.gov/taxonomy/</td>
+</tr>
+<tr>
+<td style="text-align: left;">BugSigDB</td>
+<td>https://bugsigdb.org/Main_Page</td>
+</tr>
+<tr>
+<td style="text-align: left;">gutMDisorder</td>
+<td>http://bio-annotation.cn/gutMDisorder</td>
+</tr>
+<tr>
+<td style="text-align: left;">GMRepo</td>
+<td>https://gmrepo.humangut.info/home</td>
+</tr>
+<tr>
+<td style="text-align: left;">mBodyMap</td>
+<td>https://mbodymap.microbiome.cloud/</td>
+</tr>
+<tr>
+<td style="text-align: left;">MAMI</td>
+<td>https://bioinfo.biols.ac.cn/mami/</td>
+</tr>
+<tr>
+<td style="text-align: left;">HOMD</td>
+<td>https://www.homd.org/</td>
+</tr>
+<tr>
+<td style="text-align: left;">人间传染的病原微生物目录</td>
+<td>http://www.nhc.gov.cn/qjjys/s7948/202308/b6b51d792d394fbea175e4c8094dc87e.shtml</td>
+</tr>
+<tr>
+<td style="text-align: left;">CZ ID</td>
+<td>https://czid.org/pathogen_list</td>
+</tr>
+<tr>
+<td style="text-align: left;">Karius</td>
+<td>https://kariusdx.com/karius-test/pathogens</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -8,8 +8,10 @@
       
       
       
-        <link rel="canonical" href="https://mydomain.org/mysite/getting-started/">
+        <link rel="canonical" href="https://mydomain.org/mysite/Analysis/">
       
+      
+        <link rel="prev" href="../Browse/">
       
       
       
@@ -18,7 +20,7 @@
     
     
       
-        <title>Getting started - ResMicroDb documentation</title>
+        <title>Analysis - ResMicroDb documentation</title>
       
     
     
@@ -70,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#analysis" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting started
+              Analysis
             
           </span>
         </div>
@@ -308,10 +310,19 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../Analysis/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -321,6 +332,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -341,7 +353,123 @@
 
 
 
-<h1 id="getting-started">Getting started</h1>
+<h1 id="analysis">Analysis</h1>
+<h1 id="analysis-microbiome-composition">Analysis-microbiome-composition</h1>
+<p><img alt="image-20250212114503964" src="../assets/image-20250212114503964.png" /></p>
+<p>1.筛选样本，Body_Site（默认选nasopharynx）、Sequencing_Type（单选，默认选16S）、Phenotype（默认health study participation）、Country、Sex、Age（区间）、Reads（区间）</p>
+<p>筛选年龄时，计算用的是Age_Estimate列，展示的是Age列</p>
+<p>2.示意图：figure/microbiome-composition-sketch.png。按Analysis才开始进行分析，按Export，导出筛选的样本即subset_sample.txt</p>
+<p>3-4.计算相对丰度和流行率abu_pre（见以下代码），分别对其画柱状图。（效果参考https://bioinfo.biols.ac.cn/mami/browse.php）</p>
+<p>5.计算heatmap矩阵（见以下代码）</p>
+<p>6.abu_pre的图表展示，第一列链接到对应的`Search-{taxa}，注意斜体。</p>
+<pre><code class="language-R">library(tidyverse)
+# 提前导入
+metadata = read_tsv(&quot;data/metadata.tsv&quot;) |&gt; 
+  filter(!is.na(Phenotype))
+otu_all = read_rds(&quot;data/otu_all_nonzero.rds&quot;)
+
+# 筛选样本
+subset_sample = metadata |&gt; 
+  filter(Sequencing_Type == &quot;16S&quot;,
+         Body_Site == &quot;nasopharynx&quot;,
+         Phenotype == c(&quot;COVID-19&quot;),
+         Age_Estimate &gt;1 &amp; Age_Estimate &lt;10,
+         Reads &gt; 5000) |&gt; 
+  pull(Run)
+# 用户下载可以导出样本
+write_lines(subset_sample,&quot;subset_sample.txt&quot;)
+
+# 计算平均相对丰度和流行率
+num = length(subset_sample)
+subset_otu = otu_all |&gt; 
+  filter(Run %in% subset_sample)
+abu_pre = subset_otu |&gt; 
+  group_by(taxa) |&gt; 
+  summarise(`Average relative abundance (%)` = 100*round(sum(value)/num,4), 
+            `Prevalence (%)`= 100*round(n()/num,4), .groups = 'drop') |&gt; 
+  arrange(desc(`Prevalence (%)`))
+
+# 计算core microbiota heatmap
+detections &lt;- round(10^seq(log10(0.001), log10(.1), length = 10), 3)
+
+toptaxa=abu_pre |&gt; 
+  arrange(desc(`Prevalence (%)`)) |&gt; 
+  slice_head(n = 20) |&gt; 
+  pull(taxa)
+
+otu_sub = subset_otu |&gt; 
+  filter(taxa %in% toptaxa)
+
+run_abu_pre = function(i){
+  otu_sub |&gt; 
+    filter(value&gt;i) |&gt; 
+    group_by(taxa) |&gt; 
+    summarise(pre=100*round(n()/num,6)) |&gt; 
+    mutate(abu_thre=i)
+}
+
+heatmap = purrr::map_dfr(detections, run_abu_pre) |&gt; 
+  pivot_wider(names_from = taxa,values_from = pre, values_fill = 0) |&gt; 
+  select(abu_thre,toptaxa) |&gt; 
+  column_to_rownames(&quot;abu_thre&quot;)
+</code></pre>
+<h1 id="analysis-case-control-analysis">Analysis-case-control-analysis</h1>
+<p><img alt="image-20250208213121296" src="../assets/image-20250208213121296.png" /></p>
+<p>1.数据data/Downloads/case_control_study.tsv，下拉框筛选Case、Control、Body_Site。筛选一个框的同时，对另外一个框也做出限制。点击Analysis，返回表格cc.study_exam到Related studies，显示的列如图所示。同时记录cc.study_exam的CC_ID的值（唯一）。</p>
+<p><img alt="image-20250212154630192" src="../assets/image-20250212154630192.png" /></p>
+<p>2.数据data/marker.tsv。</p>
+<p>筛选DAA_Method，过滤对应的过滤条件。需要对marker按照在不同研究富集的方向和个数进行排序。然后返回一个矩阵heatmap，矩阵上面的bar图记录每个marker在多少个队列中Fold_Change小于0和大于0。由于marker数量可能太多，下面加一个区域缩放。</p>
+<p>Fold_Change后面的问号解释内容为：the mean of the differences between 0.1-0.9 quantiles of the logarithmic in two groups.</p>
+<p><strong>！！这一部分比较复杂，可以多多讨论！！</strong></p>
+<pre><code class="language-r">marker_all=read_rds(&quot;data/marker.tsv&quot;)
+cc.study = read_tsv(&quot;data/Downloads/case_control_study.tsv&quot;)
+
+DAA_Method_value = &quot;aldex&quot; # 取值 &quot;wilcox&quot; ,&quot;fastancom&quot;,&quot;ancombc&quot;,&quot;ancombc2&quot;,&quot;linda&quot;,&quot;aldex&quot;,&quot;maaslin2&quot;,&quot;zicoseq&quot;,&quot;wilcox.clr&quot;
+Rank_value = &quot;genus&quot; # 取值&quot;genus&quot;,&quot;species&quot;
+conflict_value = &quot;no&quot; # 取值&quot;yes&quot;,&quot;no&quot;
+n_project_thre = 1
+Fold_Change_thre = 0
+P.adj_Value_thre = 0.2 
+
+cc.study_exam = cc.study|&gt; 
+  filter(Body_Site==&quot;bronchus&quot;) |&gt; 
+  filter(Case==&quot;chronic obstructive pulmonary disease&quot;) |&gt; 
+  filter(Control==&quot;health study participation&quot;) |&gt;  select(Body_Site,Case,Control,SRAStudy,Number_of_Case,Number_of_Control,Sequencing_Type,CC_ID)
+
+marker.body = marker_all |&gt; 
+  filter(CC_ID==cc.study_exam$CC_ID[1]) |&gt; 
+  filter(Rank==Rank_value) |&gt; # 过滤Taxa rank
+  filter(DAA_Method==DAA_Method_value) |&gt; # 过滤DAA_Method
+  filter(abs(Fold_Change) &gt;= Fold_Change_thre) |&gt; # 过滤Fold_Change
+  filter(P.adj_Value_thre &lt;= P.adj_Value_thre) # 过滤P.adj_Value
+
+marker_order = marker.body |&gt; 
+  group_by(Taxa) |&gt; 
+  summarise(positive=sum(Fold_Change&gt;0),
+            negative=-sum(Fold_Change&lt;0),
+            meanFC=mean(Fold_Change)) |&gt; ungroup() |&gt; 
+  mutate(conflict=if_else(positive&gt;0 &amp; negative&lt;0, &quot;yes&quot;,&quot;no&quot;)) |&gt; 
+  filter(conflict == conflict_value) |&gt; # 过滤conflict marker
+  filter(positive&gt;=n_project_thre | negative&lt;=-n_project_thre) |&gt; 
+  arrange(positive+negative,meanFC)
+
+heatmap = marker.body |&gt; 
+  filter(Taxa %in% marker_order$Taxa) |&gt; 
+  pivot_wider(Study_ID,names_from = Taxa,values_from = G_Fold_Change,values_fill = 0) |&gt; 
+  column_to_rownames(&quot;Study_ID&quot;) |&gt; 
+  select(marker_order$Taxa)
+</code></pre>
+<p><img alt="image-20250212105436201" src="../assets/image-20250212105436201.png" /></p>
+<p>3.diversity。</p>
+<p>数据data/diversity_alpha.tsv, data/diversity_beta.tsv, data/diversity_test.tsv。筛选CC_ID列为对应的CC_ID。</p>
+<p>Select study筛选Study_ID列。</p>
+<p>左图alpha diversity，数据diversity_alpha，分组为Case_Or_Control，boxplot分位数abu_min abu_q1 abu_median abu_q3 abu_max。检验p值在diversity_test的alpha_p_val。即<code>Wilcoxon test, P-value={diversity_test$alpha_p_val}</code></p>
+<p>右图beta diversity，数据diversity_beta，散点坐标PCoA1,PCoA2。分组染色Case_Or_Control。点的label为Run。检验文字为<code>R2=diversity_test$R2, P-value=diversity_test$beta_p_val</code></p>
+<p><img alt="image-20250212105445785" src="../assets/image-20250212105445785.png" /></p>
+<p>4.network</p>
+<p>数据：data/source2target_df.tsv, data/node_label_df.tsv。按照Case_Or_Control列画左右网络图case和control。筛选CC_ID列为对应的CC_ID。source2target_df为点的连边以及边的相关系数（有正负），node_label_df：所有的点taxa，点的大小value，点的颜色Phylum。</p>
+<p>Select study筛选Study_ID列。</p>
+<p>显示效果类似于https://bioinfo.ioz.ac.cn/mami/analysis.php的Network</p>
 
 
 

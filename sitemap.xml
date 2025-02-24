@@ -2,10 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://mydomain.org/mysite/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-02-24</lastmod>
+    </url>
+    <url>
+         <loc>https://mydomain.org/mysite/Analysis/</loc>
+         <lastmod>2025-02-24</lastmod>
+    </url>
+    <url>
+         <loc>https://mydomain.org/mysite/Browse/</loc>
+         <lastmod>2025-02-24</lastmod>
+    </url>
+    <url>
+         <loc>https://mydomain.org/mysite/Home/</loc>
+         <lastmod>2025-02-24</lastmod>
+    </url>
+    <url>
+         <loc>https://mydomain.org/mysite/Search/</loc>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://mydomain.org/mysite/getting-started/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
 </urlset>
